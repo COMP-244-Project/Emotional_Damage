@@ -60,6 +60,7 @@ def evaluate_model(model_name, model, X_train, X_val, y_train, y_val):
 def run_experiments(train_csv):
     """
     Runs Decision Tree, SVM, kNN, and Naive Bayes experiments.
+    Shows a clean ranked comparison table.
     """
 
     # Load and preprocess full dataset
@@ -123,12 +124,50 @@ def run_experiments(train_csv):
 
     # Create comparison table
     results_df = pd.DataFrame(results)
-    results_df = results_df.sort_values(by="macro_f1", ascending=False)
+
+    # Sort from best to worst
+    results_df = results_df.sort_values(
+        by=["macro_f1", "accuracy"],
+        ascending=False
+    )
+
+    # Remove old pandas index after sorting
+    results_df = results_df.reset_index(drop=True)
+
+    # Add real ranking column
+    results_df.insert(0, "rank", results_df.index + 1)
 
     print("\n==============================")
     print("Final Model Comparison Table")
     print("==============================")
-    print(results_df)
+
+    print(
+        results_df[
+            [
+                "rank",
+                "model",
+                "accuracy",
+                "macro_f1",
+                "weighted_f1"
+            ]
+        ].to_string(index=False)
+    )
+
+    # Save clean ranked table
+    results_df.to_csv("main_model_comparison_results.csv", index=False)
+
+    # Print best model clearly
+    best_model = results_df.iloc[0]
+
+    print("\nBest model:")
+    print("Rank:", best_model["rank"])
+    print("Model:", best_model["model"])
+    print("Accuracy:", round(best_model["accuracy"], 4))
+    print("Macro F1:", round(best_model["macro_f1"], 4))
+    print("Weighted F1:", round(best_model["weighted_f1"], 4))
+
+    print("\nSaved file:")
+    print("main_model_comparison_results.csv")
 
     return results_df
 
