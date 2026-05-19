@@ -53,7 +53,9 @@ def load_and_preprocess(csv_file):
     vectorizer = TfidfVectorizer(
         stop_words="english",
         ngram_range=(1, 2),
-        max_features=5000
+        max_features=10000,
+        sublinear_tf=True,
+        min_df=2
     )
 
     # X contains numerical text features

@@ -183,7 +183,7 @@ def train_test(train_csv, test_csv):
     # Load and preprocess training data
     X_train, y_train, vectorizer = load_and_preprocess(train_csv)
 
-    # Train final selected model: SVM
+    # Final tuned SVM model
     model = LinearSVC(
         C=0.5,
         class_weight="balanced",

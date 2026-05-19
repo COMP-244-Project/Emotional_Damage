@@ -117,7 +117,9 @@ def create_tfidf_features(X_train_text, X_test_text):
     vectorizer = TfidfVectorizer(
         stop_words="english",
         ngram_range=(1, 2),
-        max_features=5000
+        max_features=10000,
+        sublinear_tf=True,
+        min_df=2
     )
 
     X_train = vectorizer.fit_transform(X_train_text)
