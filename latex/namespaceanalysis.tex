@@ -1,0 +1,60 @@
+\doxysection{analysis Namespace Reference}
+\hypertarget{namespaceanalysis}{}\label{namespaceanalysis}\index{analysis@{analysis}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespaceanalysis_a094460a07fb42c08f8e93f85eb5ec0e0}{analyze\+\_\+dataset}} (csv\+\_\+file)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}analysis.py
+
+Dataset analysis module for the emotion classification project.
+
+This file is used to inspect the training dataset before model development.
+It prints basic information about the dataset, including sample rows, dataset
+shape, missing values, duplicate rows, emotion label distribution, and text
+length statistics.
+
+The purpose of this file is to support the analysis and report-writing part of
+the project. It is not required for final model training or prediction.
+
+Author:
+    Gleb Gaivoronskii, Andrey Iatsina, Polina Marinic
+
+Version:
+    1.0
+
+Date:
+    2026-05-27
+
+Bugs:
+    None known.
+
+Copyright:
+    University of Nicosia
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespaceanalysis_a094460a07fb42c08f8e93f85eb5ec0e0}\index{analysis@{analysis}!analyze\_dataset@{analyze\_dataset}}
+\index{analyze\_dataset@{analyze\_dataset}!analysis@{analysis}}
+\doxysubsubsection{\texorpdfstring{analyze\_dataset()}{analyze\_dataset()}}
+{\footnotesize\ttfamily \label{namespaceanalysis_a094460a07fb42c08f8e93f85eb5ec0e0} 
+analysis.\+analyze\+\_\+dataset (\begin{DoxyParamCaption}\item[{}]{csv\+\_\+file}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Analyze the structure and basic statistics of the dataset.
+
+This function loads the CSV dataset and prints useful information for
+understanding the data before training the machine learning models. It
+checks the dataset size, missing values, duplicate rows, emotion label
+distribution, and text length statistics.
+
+@param csv_file: Path to the CSV file containing the dataset.
+@type csv_file: str
+
+@return: None
+@rtype: None
+\end{DoxyVerb}
+ 

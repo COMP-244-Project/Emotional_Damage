@@ -1,0 +1,81 @@
+\doxysection{preprocessing Namespace Reference}
+\hypertarget{namespacepreprocessing}{}\label{namespacepreprocessing}\index{preprocessing@{preprocessing}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepreprocessing_ac7d08199439fa4da3c8ebdd2bb8e1527}{clean\+\_\+text}} (text)
+\item 
+\mbox{\hyperlink{namespacepreprocessing_a71b42edcf4998a55f2a795abec06ff05}{load\+\_\+and\+\_\+preprocess}} (csv\+\_\+file)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}preprocessing.py
+
+Text preprocessing and feature extraction module for the emotion classification project.
+
+This file contains the preprocessing functions used before training the machine
+learning models. It cleans raw text data and converts the cleaned text into
+TF-IDF feature vectors that can be used by scikit-learn classifiers.
+
+The main preprocessing steps include lowercasing, removing URLs, removing
+punctuation and numbers, removing extra spaces, and applying TF-IDF vectorization.
+
+Author:
+    Gleb Gaivoronskii, Andrey Iatsina, Polina Marinic
+
+Version:
+    1.0
+
+Date:
+    2026-05-27
+
+Bugs:
+    None known.
+
+Copyright:
+    University of Nicosia
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepreprocessing_ac7d08199439fa4da3c8ebdd2bb8e1527}\index{preprocessing@{preprocessing}!clean\_text@{clean\_text}}
+\index{clean\_text@{clean\_text}!preprocessing@{preprocessing}}
+\doxysubsubsection{\texorpdfstring{clean\_text()}{clean\_text()}}
+{\footnotesize\ttfamily \label{namespacepreprocessing_ac7d08199439fa4da3c8ebdd2bb8e1527} 
+preprocessing.\+clean\+\_\+text (\begin{DoxyParamCaption}\item[{}]{text}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Clean one text message before feature extraction.
+
+This function prepares raw text for the emotion classification models. It
+converts the text to lowercase, removes URLs, removes punctuation and
+numbers, and replaces multiple spaces with a single space.
+
+@param text: Raw text message.
+@type text: str
+
+@return: Cleaned text message.
+@rtype: str
+\end{DoxyVerb}
+ \Hypertarget{namespacepreprocessing_a71b42edcf4998a55f2a795abec06ff05}\index{preprocessing@{preprocessing}!load\_and\_preprocess@{load\_and\_preprocess}}
+\index{load\_and\_preprocess@{load\_and\_preprocess}!preprocessing@{preprocessing}}
+\doxysubsubsection{\texorpdfstring{load\_and\_preprocess()}{load\_and\_preprocess()}}
+{\footnotesize\ttfamily \label{namespacepreprocessing_a71b42edcf4998a55f2a795abec06ff05} 
+preprocessing.\+load\+\_\+and\+\_\+preprocess (\begin{DoxyParamCaption}\item[{}]{csv\+\_\+file}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Load the dataset, clean the text, and create TF-IDF features.
+
+This function reads the training CSV file, applies text cleaning to the
+text column, and converts the cleaned text into numerical TF-IDF features.
+It also returns the target emotion labels and the fitted vectorizer.
+
+The vectorizer is returned so it can later be reused to transform test data
+with the same vocabulary learned from the training data.
+
+@param csv_file: Path to the CSV file containing the training dataset.
+@type csv_file: str
+
+@return: TF-IDF feature matrix, emotion labels, and fitted TF-IDF vectorizer.
+@rtype: tuple
+\end{DoxyVerb}
+ 

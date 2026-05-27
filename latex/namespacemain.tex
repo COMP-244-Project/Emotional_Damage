@@ -1,0 +1,156 @@
+\doxysection{main Namespace Reference}
+\hypertarget{namespacemain}{}\label{namespacemain}\index{main@{main}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacemain_a3d734e4b1a96a2db2aac74691983ac0a}{evaluate\+\_\+model}} (model\+\_\+name, model, X\+\_\+train, X\+\_\+val, y\+\_\+train, y\+\_\+val)
+\item 
+\mbox{\hyperlink{namespacemain_af3ab8d6a2a54c4d37d7ee88a492fcd3b}{run\+\_\+experiments}} (train\+\_\+csv)
+\item 
+\mbox{\hyperlink{namespacemain_a23c701362217e0f2b9fa24ce6241d3d1}{train\+\_\+test}} (train\+\_\+csv, test\+\_\+csv)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+list \mbox{\hyperlink{namespacemain_adc79e9a79a032d587f0d7587a583f264}{LABELS}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}main.py
+
+Main training and evaluation module for the emotion classification project.
+
+This file contains the main code used to train, evaluate, and compare several
+machine learning models for emotion classification. The tested models are
+Decision Tree, Support Vector Machine, k-Nearest Neighbors, and Naive Bayes.
+
+The program loads the training dataset, applies preprocessing and TF-IDF
+feature extraction, evaluates each model on a validation set, ranks the models
+by performance, and saves the comparison results to a CSV file.
+
+The final train_test function trains the selected model on the full training
+dataset and predicts emotion labels for a separate test dataset.
+
+Author:
+    Gleb Gaivoronskii, Andrey Iatsina, Polina Marinic
+
+Version:
+    1.0
+
+Date:
+    2026-05-26
+
+Bugs:
+    None known.
+
+Copyright:
+    University of Nicosia
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacemain_a3d734e4b1a96a2db2aac74691983ac0a}\index{main@{main}!evaluate\_model@{evaluate\_model}}
+\index{evaluate\_model@{evaluate\_model}!main@{main}}
+\doxysubsubsection{\texorpdfstring{evaluate\_model()}{evaluate\_model()}}
+{\footnotesize\ttfamily \label{namespacemain_a3d734e4b1a96a2db2aac74691983ac0a} 
+main.\+evaluate\+\_\+model (\begin{DoxyParamCaption}\item[{}]{model\+\_\+name}{, }\item[{}]{model}{, }\item[{}]{X\+\_\+train}{, }\item[{}]{X\+\_\+val}{, }\item[{}]{y\+\_\+train}{, }\item[{}]{y\+\_\+val}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Train and evaluate one machine learning model.
+
+This helper function trains the given model on the training data, predicts
+labels for the validation data, calculates the main evaluation scores, and
+prints a classification report.
+
+@param model_name: Name of the model being evaluated.
+@type model_name: str
+
+@param model: Machine learning model with fit() and predict() methods.
+@type model: object
+
+@param X_train: Training feature matrix.
+@type X_train: scipy sparse matrix
+
+@param X_val: Validation feature matrix.
+@type X_val: scipy sparse matrix
+
+@param y_train: Training labels.
+@type y_train: pandas Series
+
+@param y_val: Validation labels.
+@type y_val: pandas Series
+
+@return: Dictionary containing the model name, accuracy, macro F1-score,
+         and weighted F1-score.
+@rtype: dict
+\end{DoxyVerb}
+ \Hypertarget{namespacemain_af3ab8d6a2a54c4d37d7ee88a492fcd3b}\index{main@{main}!run\_experiments@{run\_experiments}}
+\index{run\_experiments@{run\_experiments}!main@{main}}
+\doxysubsubsection{\texorpdfstring{run\_experiments()}{run\_experiments()}}
+{\footnotesize\ttfamily \label{namespacemain_af3ab8d6a2a54c4d37d7ee88a492fcd3b} 
+main.\+run\+\_\+experiments (\begin{DoxyParamCaption}\item[{}]{train\+\_\+csv}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Run all model evaluation experiments.
+
+This function loads and preprocesses the training dataset, splits it into
+training and validation sets, trains several machine learning models, and
+compares their performance. The final results are sorted from best to worst
+using macro F1-score and accuracy.
+
+The ranked comparison table is printed to the console and saved as a CSV
+file named main_model_comparison_results.csv.
+
+@param train_csv: Path to the training CSV file.
+@type train_csv: str
+
+@return: Ranked table containing the evaluation results for all models.
+@rtype: pandas.DataFrame
+\end{DoxyVerb}
+ \Hypertarget{namespacemain_a23c701362217e0f2b9fa24ce6241d3d1}\index{main@{main}!train\_test@{train\_test}}
+\index{train\_test@{train\_test}!main@{main}}
+\doxysubsubsection{\texorpdfstring{train\_test()}{train\_test()}}
+{\footnotesize\ttfamily \label{namespacemain_a23c701362217e0f2b9fa24ce6241d3d1} 
+main.\+train\+\_\+test (\begin{DoxyParamCaption}\item[{}]{train\+\_\+csv}{, }\item[{}]{test\+\_\+csv}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Train the final selected model and predict labels for the test dataset.
+
+This is the final function required for the assignment. It trains the
+selected best-performing model on the full training dataset, applies the
+same preprocessing and TF-IDF vectorizer to the test dataset, and returns
+the test data with predicted emotion labels.
+
+The same vectorizer fitted on the training data must be used to transform
+the test data. This avoids learning new features from the test set.
+
+@param train_csv: Path to the training CSV file.
+@type train_csv: str
+
+@param test_csv: Path to the test CSV file.
+@type test_csv: str
+
+@return: Test dataset with an additional column containing predicted
+         emotion labels.
+@rtype: pandas.DataFrame
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacemain_adc79e9a79a032d587f0d7587a583f264}\index{main@{main}!LABELS@{LABELS}}
+\index{LABELS@{LABELS}!main@{main}}
+\doxysubsubsection{\texorpdfstring{LABELS}{LABELS}}
+{\footnotesize\ttfamily \label{namespacemain_adc79e9a79a032d587f0d7587a583f264} 
+list main.\+LABELS}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [}
+\DoxyCodeLine{00002\ \ \ \ \ \textcolor{stringliteral}{"{}sadness"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \textcolor{stringliteral}{"{}neutral"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \textcolor{stringliteral}{"{}worry"{}},}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{stringliteral}{"{}happiness"{}},}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{stringliteral}{"{}fun"{}},}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{stringliteral}{"{}surprise"{}},}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{stringliteral}{"{}hate"{}}}
+\DoxyCodeLine{00009\ ]}
+
+\end{DoxyCode}

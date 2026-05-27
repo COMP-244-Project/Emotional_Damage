@@ -1,0 +1,268 @@
+\doxysection{split\+\_\+experiments Namespace Reference}
+\hypertarget{namespacesplit__experiments}{}\label{namespacesplit__experiments}\index{split\_experiments@{split\_experiments}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_ae1d1c60e9517512539dc4b7de3072e1d}{load\+\_\+dataset}} (csv\+\_\+file)
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a65015f310ab0d37686e34005639f2876}{split\+\_\+dataset}} (df, train\+\_\+size)
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a966d9f5e17b1a87d8d6ba60a228b9bca}{create\+\_\+tfidf\+\_\+features}} (X\+\_\+train\+\_\+text, X\+\_\+test\+\_\+text)
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a0639d6eaf084c50ab834ae6c7d3154f0}{get\+\_\+models}} ()
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a03e094ab1f977f09bdf1074077ee26d0}{evaluate\+\_\+model}} (model\+\_\+name, model, X\+\_\+train, X\+\_\+val, y\+\_\+train, y\+\_\+val, split\+\_\+name)
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a4e85226ec3ff1b36e553cbe86433c9fe}{print\+\_\+results\+\_\+by\+\_\+split}} (results\+\_\+df)
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a87cb587c7e1e2acbd054ac685643e533}{print\+\_\+overall\+\_\+best}} (results\+\_\+df)
+\item 
+\mbox{\hyperlink{namespacesplit__experiments_a4ca2e4c14674939a1d7aba4e2a6d2f1c}{run\+\_\+split\+\_\+experiments}} (csv\+\_\+file)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacesplit__experiments_aee6427cde655115316e81ea13211a7fa}\label{namespacesplit__experiments_aee6427cde655115316e81ea13211a7fa} 
+int {\bfseries RANDOM\+\_\+\+STATE} = 42
+\item 
+list \mbox{\hyperlink{namespacesplit__experiments_a822179a97bcfb688475641678ba83099}{LABELS}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}split_experiments.py
+
+Experiment module for testing different train/validation splits.
+
+This file contains the code used to evaluate several machine learning models
+on different training and validation split sizes. The purpose of this script is
+to check whether model performance changes when the amount of training data is
+increased or decreased.
+
+The tested models include Decision Tree, Support Vector Machine,
+k-Nearest Neighbors, and Naive Bayes. Each model is trained and evaluated on
+multiple split settings, and the results are compared using accuracy,
+macro F1-score, and weighted F1-score.
+
+The final comparison table helps identify which model and split combination
+performs best for the emotion classification task.
+
+Author:
+     Gleb Gaivoronskii, Andrey Iatsina, Polina Marinic
+
+Version:
+    1.0
+
+Date:
+    2026-05-27
+
+Bugs:
+    None known.
+
+Copyright:
+    University of Nicosia
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacesplit__experiments_a966d9f5e17b1a87d8d6ba60a228b9bca}\index{split\_experiments@{split\_experiments}!create\_tfidf\_features@{create\_tfidf\_features}}
+\index{create\_tfidf\_features@{create\_tfidf\_features}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{create\_tfidf\_features()}{create\_tfidf\_features()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a966d9f5e17b1a87d8d6ba60a228b9bca} 
+split\+\_\+experiments.\+create\+\_\+tfidf\+\_\+features (\begin{DoxyParamCaption}\item[{}]{X\+\_\+train\+\_\+text}{, }\item[{}]{X\+\_\+test\+\_\+text}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Convert cleaned text into TF-IDF feature matrices.
+
+The TF-IDF vectorizer is fitted only on the training text. The testing text
+is transformed using the same fitted vectorizer. This avoids data leakage
+and keeps the feature space consistent between training and testing data.
+
+@param X_train_text: Cleaned training text.
+@type X_train_text: pandas Series
+
+@param X_test_text: Cleaned testing text.
+@type X_test_text: pandas Series
+
+@return: Training feature matrix, testing feature matrix, and fitted
+         TF-IDF vectorizer.
+@rtype: tuple
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_a03e094ab1f977f09bdf1074077ee26d0}\index{split\_experiments@{split\_experiments}!evaluate\_model@{evaluate\_model}}
+\index{evaluate\_model@{evaluate\_model}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{evaluate\_model()}{evaluate\_model()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a03e094ab1f977f09bdf1074077ee26d0} 
+split\+\_\+experiments.\+evaluate\+\_\+model (\begin{DoxyParamCaption}\item[{}]{model\+\_\+name}{, }\item[{}]{model}{, }\item[{}]{X\+\_\+train}{, }\item[{}]{X\+\_\+val}{, }\item[{}]{y\+\_\+train}{, }\item[{}]{y\+\_\+val}{, }\item[{}]{split\+\_\+name}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Train and evaluate one model for a specific data split.
+
+This function trains the given model on the training data, predicts emotion
+labels for the validation/testing data, calculates the main evaluation
+scores, and returns the results together with the split name.
+
+@param model_name: Name of the model being evaluated.
+@type model_name: str
+
+@param model: Machine learning model with fit() and predict() methods.
+@type model: object
+
+@param X_train: Training feature matrix.
+@type X_train: scipy sparse matrix
+
+@param X_val: Validation or testing feature matrix.
+@type X_val: scipy sparse matrix
+
+@param y_train: Training labels.
+@type y_train: pandas Series
+
+@param y_val: Validation or testing labels.
+@type y_val: pandas Series
+
+@param split_name: Description of the train/test split.
+@type split_name: str
+
+@return: Dictionary containing the split name, model name, accuracy,
+         macro F1-score, and weighted F1-score.
+@rtype: dict
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_a0639d6eaf084c50ab834ae6c7d3154f0}\index{split\_experiments@{split\_experiments}!get\_models@{get\_models}}
+\index{get\_models@{get\_models}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{get\_models()}{get\_models()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a0639d6eaf084c50ab834ae6c7d3154f0} 
+split\+\_\+experiments.\+get\+\_\+models (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create the machine learning models used in the experiments.
+
+The project compares four classifiers: Decision Tree, Support Vector
+Machine, k-Nearest Neighbors, and Naive Bayes. The model settings are based
+on the selected experiment configuration for this project.
+
+@return: Dictionary where each key is a model name and each value is a
+         scikit-learn model object.
+@rtype: dict
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_ae1d1c60e9517512539dc4b7de3072e1d}\index{split\_experiments@{split\_experiments}!load\_dataset@{load\_dataset}}
+\index{load\_dataset@{load\_dataset}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{load\_dataset()}{load\_dataset()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_ae1d1c60e9517512539dc4b7de3072e1d} 
+split\+\_\+experiments.\+load\+\_\+dataset (\begin{DoxyParamCaption}\item[{}]{csv\+\_\+file}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Load the dataset and prepare the text column for experiments.
+
+This function reads the CSV file, checks that the required columns are
+available, removes rows with missing values, converts the text column to
+string format, and creates a cleaned text column using the preprocessing
+function.
+
+@param csv_file: Path to the CSV dataset file.
+@type csv_file: str
+
+@return: Dataframe containing the original data and the cleaned text column.
+@rtype: pandas.DataFrame
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_a87cb587c7e1e2acbd054ac685643e533}\index{split\_experiments@{split\_experiments}!print\_overall\_best@{print\_overall\_best}}
+\index{print\_overall\_best@{print\_overall\_best}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{print\_overall\_best()}{print\_overall\_best()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a87cb587c7e1e2acbd054ac685643e533} 
+split\+\_\+experiments.\+print\+\_\+overall\+\_\+best (\begin{DoxyParamCaption}\item[{}]{results\+\_\+df}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Print the overall ranking across all splits.
+
+This function sorts all experiment results from best to worst using macro
+F1-score and accuracy. It then prints the full ranking table and highlights
+the best overall model and split combination.
+
+@param results_df: Dataframe containing all model evaluation results.
+@type results_df: pandas.DataFrame
+
+@return: None
+@rtype: None
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_a4e85226ec3ff1b36e553cbe86433c9fe}\index{split\_experiments@{split\_experiments}!print\_results\_by\_split@{print\_results\_by\_split}}
+\index{print\_results\_by\_split@{print\_results\_by\_split}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{print\_results\_by\_split()}{print\_results\_by\_split()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a4e85226ec3ff1b36e553cbe86433c9fe} 
+split\+\_\+experiments.\+print\+\_\+results\+\_\+by\+\_\+split (\begin{DoxyParamCaption}\item[{}]{results\+\_\+df}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Print model results separately for each train/test split.
+
+For each split, the models are sorted from best to worst using macro
+F1-score first and accuracy second. A clear rank column is added so the
+output is easier to read than the default pandas index.
+
+@param results_df: Dataframe containing all model evaluation results.
+@type results_df: pandas.DataFrame
+
+@return: None
+@rtype: None
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_a4ca2e4c14674939a1d7aba4e2a6d2f1c}\index{split\_experiments@{split\_experiments}!run\_split\_experiments@{run\_split\_experiments}}
+\index{run\_split\_experiments@{run\_split\_experiments}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{run\_split\_experiments()}{run\_split\_experiments()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a4ca2e4c14674939a1d7aba4e2a6d2f1c} 
+split\+\_\+experiments.\+run\+\_\+split\+\_\+experiments (\begin{DoxyParamCaption}\item[{}]{csv\+\_\+file}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Run all train/test split experiments.
+
+This function loads the dataset, creates several train/test splits, converts
+text into TF-IDF features, trains each machine learning model, and stores
+the evaluation results.
+
+The tested splits are:
+- 40% train / 60% test
+- 30% train / 70% test
+- 20% train / 80% test
+
+The final results are saved to split_model_comparison_results.csv.
+
+@param csv_file: Path to the training CSV file.
+@type csv_file: str
+
+@return: Dataframe containing the results for all models and splits.
+@rtype: pandas.DataFrame
+\end{DoxyVerb}
+ \Hypertarget{namespacesplit__experiments_a65015f310ab0d37686e34005639f2876}\index{split\_experiments@{split\_experiments}!split\_dataset@{split\_dataset}}
+\index{split\_dataset@{split\_dataset}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{split\_dataset()}{split\_dataset()}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a65015f310ab0d37686e34005639f2876} 
+split\+\_\+experiments.\+split\+\_\+dataset (\begin{DoxyParamCaption}\item[{}]{df}{, }\item[{}]{train\+\_\+size}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Split the dataset into training and testing parts.
+
+The train_size value controls how much of the dataset is used for training.
+For example, train_size = 0.40 means that 40% of the data is used for
+training and 60% is used for testing.
+
+Stratified splitting is used so that the emotion labels keep similar
+proportions in both the training and testing sets.
+
+@param df: Dataset containing the cleaned text and emotion labels.
+@type df: pandas.DataFrame
+
+@param train_size: Proportion of the dataset used for training.
+@type train_size: float
+
+@return: Training text, testing text, training labels, and testing labels.
+@rtype: tuple
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacesplit__experiments_a822179a97bcfb688475641678ba83099}\index{split\_experiments@{split\_experiments}!LABELS@{LABELS}}
+\index{LABELS@{LABELS}!split\_experiments@{split\_experiments}}
+\doxysubsubsection{\texorpdfstring{LABELS}{LABELS}}
+{\footnotesize\ttfamily \label{namespacesplit__experiments_a822179a97bcfb688475641678ba83099} 
+list split\+\_\+experiments.\+LABELS}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [}
+\DoxyCodeLine{00002\ \ \ \ \ \textcolor{stringliteral}{"{}sadness"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \textcolor{stringliteral}{"{}neutral"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \textcolor{stringliteral}{"{}worry"{}},}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{stringliteral}{"{}happiness"{}},}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{stringliteral}{"{}fun"{}},}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{stringliteral}{"{}surprise"{}},}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{stringliteral}{"{}hate"{}}}
+\DoxyCodeLine{00009\ ]}
+
+\end{DoxyCode}

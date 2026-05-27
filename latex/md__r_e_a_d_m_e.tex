@@ -1,0 +1,390 @@
+\chapter{Emotional Damage — Emotion Classification Project}
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{Emotional Damage — Emotion Classification Project@{Emotional Damage — Emotion Classification Project}}
+\label{md__r_e_a_d_m_e_autotoc_md0}%
+\Hypertarget{md__r_e_a_d_m_e_autotoc_md0}%
+
+
+A machine learning project for multi-\/class emotion classification from short text messages using classical NLP techniques and supervised learning models.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysection{\texorpdfstring{Project Overview}{Project Overview}}\label{md__r_e_a_d_m_e_autotoc_md2}
+This project was developed for {\bfseries{COMP-\/244}} and investigates how different classical machine learning algorithms perform on an emotion classification task using TF-\/\+IDF text representations.
+
+The system classifies text into one of seven emotion categories\+:
+
+
+\begin{DoxyItemize}
+\item sadness
+\item neutral
+\item worry
+\item happiness
+\item fun
+\item surprise
+\item hate
+\end{DoxyItemize}
+
+The project focuses on\+:
+
+
+\begin{DoxyItemize}
+\item text preprocessing,
+\item feature engineering with TF-\/\+IDF,
+\item comparative evaluation of multiple classifiers,
+\item handling class imbalance,
+\item analysing performance under limited training data.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysection{\texorpdfstring{Repository Structure}{Repository Structure}}\label{md__r_e_a_d_m_e_autotoc_md4}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Emotional\_Damage/}
+\DoxyCodeLine{│}
+\DoxyCodeLine{├──\ analysis.py}
+\DoxyCodeLine{├──\ preprocessing.py}
+\DoxyCodeLine{├──\ split\_experiments.py}
+\DoxyCodeLine{├──\ main.py}
+\DoxyCodeLine{│}
+\DoxyCodeLine{├──\ train\_emotion.csv}
+\DoxyCodeLine{│}
+\DoxyCodeLine{├──\ split\_label\_distributions.csv}
+\DoxyCodeLine{├──\ split\_model\_comparison\_results.csv}
+\DoxyCodeLine{├──\ main\_model\_comparison\_results.csv}
+\DoxyCodeLine{│}
+\DoxyCodeLine{└──\ README.md}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysection{\texorpdfstring{File Descriptions}{File Descriptions}}\label{md__r_e_a_d_m_e_autotoc_md6}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{\texorpdfstring{{\ttfamily analysis.\+py}}{{\ttfamily analysis.\+py}}}\label{md__r_e_a_d_m_e_autotoc_md7}
+Performs exploratory data analysis (EDA) on the dataset.\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysubsubsection{\texorpdfstring{Responsibilities}{Responsibilities}}\label{md__r_e_a_d_m_e_autotoc_md8}
+
+\begin{DoxyItemize}
+\item Loads dataset
+\item Checks\+:
+\begin{DoxyItemize}
+\item missing values
+\item duplicate samples
+\item label distribution
+\item dataset shape
+\end{DoxyItemize}
+\item Computes text length statistics
+\end{DoxyItemize}
+
+This file was used to better understand dataset characteristics before modelling.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysubsection{\texorpdfstring{{\ttfamily preprocessing.\+py}}{{\ttfamily preprocessing.\+py}}}\label{md__r_e_a_d_m_e_autotoc_md10}
+Contains all preprocessing and feature extraction logic.\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsubsection{\texorpdfstring{Preprocessing Pipeline}{Preprocessing Pipeline}}\label{md__r_e_a_d_m_e_autotoc_md11}
+The text cleaning process includes\+:
+
+
+\begin{DoxyItemize}
+\item lowercasing
+\item URL removal
+\item punctuation removal
+\item number removal
+\item whitespace normalization
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysubsubsection{\texorpdfstring{TF-\/\+IDF Vectorization}{TF-\/\+IDF Vectorization}}\label{md__r_e_a_d_m_e_autotoc_md12}
+The project uses {\ttfamily Tfidf\+Vectorizer} with tuned parameters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{TfidfVectorizer(}
+\DoxyCodeLine{\ \ \ \ stop\_words=\textcolor{stringliteral}{"{}english"{}},}
+\DoxyCodeLine{\ \ \ \ ngram\_range=(1,\ 2),}
+\DoxyCodeLine{\ \ \ \ max\_features=10000,}
+\DoxyCodeLine{\ \ \ \ sublinear\_tf=\textcolor{keyword}{True},}
+\DoxyCodeLine{\ \ \ \ min\_df=2}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysubsubsection{\texorpdfstring{Why These Parameters?}{Why These Parameters?}}\label{md__r_e_a_d_m_e_autotoc_md13}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Parameter   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Purpose    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Parameter   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Purpose    }\\\cline{1-2}
+\endhead
+`stop\+\_\+words=\textquotesingle{}english'{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Removes common non-\/informative words \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}ngram\+\_\+range=(1,2){\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Captures both single words and short phrases \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}max\+\_\+features=10000{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Limits vocabulary size and reduces noise \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}sublinear\+\_\+tf=True{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Dampens impact of extremely frequent words \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}min\+\_\+df=2\`{}   &Removes extremely rare words unlikely to generalize   \\\cline{1-2}
+\end{longtabu}
+
+
+The vectorizer is always fitted {\bfseries{only on training data}} to prevent data leakage.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md15}{}\doxysubsection{\texorpdfstring{{\ttfamily split\+\_\+experiments.\+py}}{{\ttfamily split\+\_\+experiments.\+py}}}\label{md__r_e_a_d_m_e_autotoc_md15}
+Runs experiments using multiple train/test split configurations.\hypertarget{md__r_e_a_d_m_e_autotoc_md16}{}\doxysubsubsection{\texorpdfstring{Evaluated Splits}{Evaluated Splits}}\label{md__r_e_a_d_m_e_autotoc_md16}
+
+\begin{DoxyItemize}
+\item 40\% train / 60\% test
+\item 30\% train / 70\% test
+\item 20\% train / 80\% test
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md17}{}\doxysubsubsection{\texorpdfstring{Purpose}{Purpose}}\label{md__r_e_a_d_m_e_autotoc_md17}
+This file evaluates how model performance changes when less training data is available.\hypertarget{md__r_e_a_d_m_e_autotoc_md18}{}\doxysubsubsection{\texorpdfstring{Metrics Computed}{Metrics Computed}}\label{md__r_e_a_d_m_e_autotoc_md18}
+
+\begin{DoxyItemize}
+\item Accuracy
+\item Macro F1
+\item Weighted F1
+\end{DoxyItemize}
+
+Results are exported to\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily split\+\_\+model\+\_\+comparison\+\_\+results.\+csv}
+\item {\ttfamily split\+\_\+label\+\_\+distributions.\+csv}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md20}{}\doxysubsection{\texorpdfstring{{\ttfamily main.\+py}}{{\ttfamily main.\+py}}}\label{md__r_e_a_d_m_e_autotoc_md20}
+Main training and evaluation pipeline.\hypertarget{md__r_e_a_d_m_e_autotoc_md21}{}\doxysubsubsection{\texorpdfstring{Models Evaluated}{Models Evaluated}}\label{md__r_e_a_d_m_e_autotoc_md21}
+The project compares four classical machine learning algorithms\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Model   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Model   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+Decision Tree   &Tree-\/based classifier with constrained depth    \\\cline{1-2}
+Linear\+SVC   &Linear Support Vector Machine    \\\cline{1-2}
+k\+NN   &k-\/\+Nearest Neighbours using cosine similarity    \\\cline{1-2}
+Multinomial Naive Bayes   &Probabilistic classifier for sparse text   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md22}{}\doxysubsubsection{\texorpdfstring{Ensemble Experiments}{Ensemble Experiments}}\label{md__r_e_a_d_m_e_autotoc_md22}
+The project also explored ensemble approaches during experimentation.
+
+Voting-\/based ensembles were tested conceptually to combine predictions from multiple classifiers. The goal was to improve robustness by aggregating predictions from different learning paradigms.
+
+However\+:
+
+
+\begin{DoxyItemize}
+\item Linear\+SVC consistently outperformed ensemble combinations,
+\item ensemble models added computational complexity,
+\item macro F1 improvements were minimal.
+\end{DoxyItemize}
+
+As a result, the final system retained the simpler and more efficient Linear\+SVC pipeline.\hypertarget{md__r_e_a_d_m_e_autotoc_md23}{}\doxysubsubsection{\texorpdfstring{Final Selected Model}{Final Selected Model}}\label{md__r_e_a_d_m_e_autotoc_md23}
+The final model is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{TF-\/IDF\ Vectorizer\ +\ LinearSVC}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md24}{}\doxysubsubsection{\texorpdfstring{Why Linear\+SVC?}{Why Linear\+SVC?}}\label{md__r_e_a_d_m_e_autotoc_md24}
+The final model uses {\ttfamily Linear\+SVC}, which is a {\bfseries{linear Support Vector Machine}}.
+
+It does {\bfseries{not}} apply the kernel trick.
+
+This design choice is appropriate because TF-\/\+IDF generates\+:
+
+
+\begin{DoxyItemize}
+\item extremely high-\/dimensional
+\item sparse feature vectors
+\end{DoxyItemize}
+
+In such spaces, text classes are often approximately linearly separable, meaning linear classifiers perform very effectively while remaining computationally efficient.
+
+Compared with kernel SVMs\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Linear\+SVC} scales significantly better,
+\item training is faster,
+\item memory usage is lower,
+\item sparse matrices are handled efficiently.
+\end{DoxyItemize}
+
+Balanced class weights were also used to improve performance on underrepresented classes such as {\ttfamily surprise}.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md26}{}\doxysection{\texorpdfstring{Machine Learning Discussion}{Machine Learning Discussion}}\label{md__r_e_a_d_m_e_autotoc_md26}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md27}{}\doxysubsection{\texorpdfstring{Why Decision Trees Performed Poorly}{Why Decision Trees Performed Poorly}}\label{md__r_e_a_d_m_e_autotoc_md27}
+Decision Trees tend to overfit high-\/dimensional sparse TF-\/\+IDF spaces because they attempt to split on thousands of individual features.
+
+This leads to\+:
+
+
+\begin{DoxyItemize}
+\item unstable decision boundaries,
+\item memorization of training noise,
+\item weak generalization.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md29}{}\doxysubsection{\texorpdfstring{Why k\+NN Was Limited}{Why k\+NN Was Limited}}\label{md__r_e_a_d_m_e_autotoc_md29}
+Although cosine similarity improves k\+NN performance for text data, k\+NN still suffers from the curse of dimensionality.
+
+In sparse TF-\/\+IDF spaces\+:
+
+
+\begin{DoxyItemize}
+\item distances between samples become less informative,
+\item neighborhood quality degrades,
+\item classification becomes less reliable.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md31}{}\doxysubsection{\texorpdfstring{Why Naive Bayes Worked Well}{Why Naive Bayes Worked Well}}\label{md__r_e_a_d_m_e_autotoc_md31}
+Despite its unrealistic independence assumption, Naive Bayes performs surprisingly well on many NLP tasks because\+:
+
+
+\begin{DoxyItemize}
+\item word frequencies remain highly informative,
+\item probabilistic estimation is efficient,
+\item sparse text features align well with multinomial modelling.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md33}{}\doxysubsection{\texorpdfstring{Why Linear\+SVC Performed Best}{Why Linear\+SVC Performed Best}}\label{md__r_e_a_d_m_e_autotoc_md33}
+Linear SVMs are especially effective for text classification because\+:
+
+
+\begin{DoxyItemize}
+\item TF-\/\+IDF spaces are high-\/dimensional,
+\item many classes become approximately linearly separable,
+\item margin maximization improves generalization,
+\item sparse matrices are processed efficiently.
+\end{DoxyItemize}
+
+The model achieved the strongest macro F1 scores across all evaluated configurations.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md35}{}\doxysection{\texorpdfstring{Evaluation Metrics}{Evaluation Metrics}}\label{md__r_e_a_d_m_e_autotoc_md35}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md36}{}\doxysubsection{\texorpdfstring{Accuracy}{Accuracy}}\label{md__r_e_a_d_m_e_autotoc_md36}
+Measures overall classification correctness.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Accuracy\ =\ Correct\ Predictions\ /\ Total\ Predictions}
+
+\end{DoxyCode}
+
+
+Useful as a general indicator but less reliable for imbalanced datasets.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md38}{}\doxysubsection{\texorpdfstring{Macro F1}{Macro F1}}\label{md__r_e_a_d_m_e_autotoc_md38}
+Averages F1 scores equally across all classes.
+
+This metric is especially important because\+:
+
+
+\begin{DoxyItemize}
+\item the dataset is imbalanced,
+\item minority classes must still be evaluated fairly.
+\end{DoxyItemize}
+
+Macro F1 was treated as the primary evaluation metric.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md40}{}\doxysubsection{\texorpdfstring{Weighted F1}{Weighted F1}}\label{md__r_e_a_d_m_e_autotoc_md40}
+Weights class F1 scores according to class frequency.
+
+Provides a balance between\+:
+
+
+\begin{DoxyItemize}
+\item overall performance,
+\item class-\/sensitive evaluation.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md42}{}\doxysection{\texorpdfstring{Dataset Notes}{Dataset Notes}}\label{md__r_e_a_d_m_e_autotoc_md42}
+The dataset contains\+:
+
+
+\begin{DoxyItemize}
+\item 8000 labelled text samples
+\item 7 emotion categories
+\end{DoxyItemize}
+
+The dataset was checked for\+:
+
+
+\begin{DoxyItemize}
+\item missing values
+\item duplicate entries
+\end{DoxyItemize}
+
+The {\ttfamily surprise} class is underrepresented, which motivated the use of\+:
+
+
+\begin{DoxyItemize}
+\item macro F1 evaluation,
+\item balanced class weights.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md44}{}\doxysection{\texorpdfstring{Final Conclusions}{Final Conclusions}}\label{md__r_e_a_d_m_e_autotoc_md44}
+The experiments demonstrate that\+:
+
+
+\begin{DoxyItemize}
+\item TF-\/\+IDF remains highly effective for classical NLP pipelines,
+\item Linear\+SVC is extremely strong for sparse text classification,
+\item macro F1 is essential for imbalanced emotion datasets,
+\item simpler linear models can outperform more complex alternatives,
+\item ensemble methods did not provide sufficient improvement to justify added complexity.
+\end{DoxyItemize}
+
+The final system achieved the best balance between\+:
+
+
+\begin{DoxyItemize}
+\item accuracy,
+\item generalization,
+\item computational efficiency.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md46}{}\doxysection{\texorpdfstring{Future Improvements}{Future Improvements}}\label{md__r_e_a_d_m_e_autotoc_md46}
+Potential future work includes\+:
+
+
+\begin{DoxyItemize}
+\item transformer-\/based models (BERT, Ro\+BERTa),
+\item contextual embeddings,
+\item deep learning architectures,
+\item hyperparameter optimization,
+\item advanced ensemble methods,
+\item data augmentation for minority classes.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md48}{}\doxysection{\texorpdfstring{Contributors}{Contributors}}\label{md__r_e_a_d_m_e_autotoc_md48}
+
+\begin{DoxyItemize}
+\item Polina Marinic
+\item Andrei Iatsina
+\item Gleb Gaivoronskii
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md50}{}\doxysection{\texorpdfstring{Technologies Used}{Technologies Used}}\label{md__r_e_a_d_m_e_autotoc_md50}
+
+\begin{DoxyItemize}
+\item Python
+\item scikit-\/learn
+\item pandas
+\item Num\+Py
+\item TF-\/\+IDF
+\item Linear\+SVC
+\item Classical Machine Learning
+\item NLP preprocessing 
+\end{DoxyItemize}
