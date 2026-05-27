@@ -339,9 +339,9 @@ Potential future work includes:
 
 # Contributors
 
-* feroxazee
-* Andrei-YA
-* polinamarinic
+* Polina Marinic
+* Andrei Iatsina
+* Gleb Gaivoronskii
 
 ---
 
