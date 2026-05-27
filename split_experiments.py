@@ -1,3 +1,36 @@
+"""
+split_experiments.py
+
+Experiment module for testing different train/validation splits.
+
+This file contains the code used to evaluate several machine learning models
+on different training and validation split sizes. The purpose of this script is
+to check whether model performance changes when the amount of training data is
+increased or decreased.
+
+The tested models include Decision Tree, Support Vector Machine,
+k-Nearest Neighbors, and Naive Bayes. Each model is trained and evaluated on
+multiple split settings, and the results are compared using accuracy,
+macro F1-score, and weighted F1-score.
+
+The final comparison table helps identify which model and split combination
+performs best for the emotion classification task.
+
+Author:
+     Gleb Gaivoronskii, Andrey Iatsina, Polina Marinic
+
+Version:
+    1.0
+
+Date:
+    2026-05-27
+
+Bugs:
+    None known.
+
+Copyright:
+    University of Nicosia
+"""
 import pandas as pd
 
 from preprocessing import clean_text
@@ -13,10 +46,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, f1_score
 
 
-# ---------------------------------------------------------
 # Global settings
-# ---------------------------------------------------------
-
 RANDOM_STATE = 42
 
 LABELS = [
@@ -29,18 +59,20 @@ LABELS = [
     "hate"
 ]
 
-
-# ---------------------------------------------------------
-# Step 1: Load and clean dataset
-# ---------------------------------------------------------
-
 def load_dataset(csv_file):
     """
-    Loads the CSV file and cleans the text column.
+    Load the dataset and prepare the text column for experiments.
 
-    The CSV file must contain:
-    - text
-    - emotion
+    This function reads the CSV file, checks that the required columns are
+    available, removes rows with missing values, converts the text column to
+    string format, and creates a cleaned text column using the preprocessing
+    function.
+
+    @param csv_file: Path to the CSV dataset file.
+    @type csv_file: str
+
+    @return: Dataframe containing the original data and the cleaned text column.
+    @rtype: pandas.DataFrame
     """
 
     print("\nLoading dataset...")
@@ -68,21 +100,25 @@ def load_dataset(csv_file):
 
     return df
 
-
-# ---------------------------------------------------------
-# Step 2: Split data into train and test
-# ---------------------------------------------------------
-
 def split_dataset(df, train_size):
     """
-    Splits the dataset into training and testing sets.
+    Split the dataset into training and testing parts.
 
-    Example:
-    train_size = 0.40 means:
-    40% training data
-    60% testing data
+    The train_size value controls how much of the dataset is used for training.
+    For example, train_size = 0.40 means that 40% of the data is used for
+    training and 60% is used for testing.
 
-    stratify=y keeps class proportions similar in both sets.
+    Stratified splitting is used so that the emotion labels keep similar
+    proportions in both the training and testing sets.
+
+    @param df: Dataset containing the cleaned text and emotion labels.
+    @type df: pandas.DataFrame
+
+    @param train_size: Proportion of the dataset used for training.
+    @type train_size: float
+
+    @return: Training text, testing text, training labels, and testing labels.
+    @rtype: tuple
     """
 
     X = df["clean_text"]
@@ -98,20 +134,23 @@ def split_dataset(df, train_size):
 
     return X_train_text, X_test_text, y_train, y_test
 
-
-# ---------------------------------------------------------
-# Step 3: Convert text to TF-IDF features
-# ---------------------------------------------------------
-
 def create_tfidf_features(X_train_text, X_test_text):
     """
-    Converts text into numerical TF-IDF features.
+    Convert cleaned text into TF-IDF feature matrices.
 
-    Important:
-    - fit_transform is used ONLY on the training data
-    - transform is used on the testing data
+    The TF-IDF vectorizer is fitted only on the training text. The testing text
+    is transformed using the same fitted vectorizer. This avoids data leakage
+    and keeps the feature space consistent between training and testing data.
 
-    This avoids data leakage.
+    @param X_train_text: Cleaned training text.
+    @type X_train_text: pandas Series
+
+    @param X_test_text: Cleaned testing text.
+    @type X_test_text: pandas Series
+
+    @return: Training feature matrix, testing feature matrix, and fitted
+             TF-IDF vectorizer.
+    @rtype: tuple
     """
 
     vectorizer = TfidfVectorizer(
@@ -127,20 +166,17 @@ def create_tfidf_features(X_train_text, X_test_text):
 
     return X_train, X_test, vectorizer
 
-
-# ---------------------------------------------------------
-# Step 4: Define machine learning models
-# ---------------------------------------------------------
-
 def get_models():
     """
-    Creates the four machine learning models required for the project.
+    Create the machine learning models used in the experiments.
 
-    Models:
-    1. Decision Tree
-    2. SVM
-    3. kNN
-    4. Naive Bayes
+    The project compares four classifiers: Decision Tree, Support Vector
+    Machine, k-Nearest Neighbors, and Naive Bayes. The model settings are based
+    on the selected experiment configuration for this project.
+
+    @return: Dictionary where each key is a model name and each value is a
+             scikit-learn model object.
+    @rtype: dict
     """
 
     models = {
@@ -169,28 +205,52 @@ def get_models():
 
     return models
 
-
-# ---------------------------------------------------------
-# Step 5: Train and evaluate one model
-# ---------------------------------------------------------
-
-def evaluate_model(model_name, model, X_train, X_test, y_train, y_test, split_name):
+def evaluate_model(model_name, model, X_train, X_val, y_train, y_val, split_name):
     """
-    Trains one model and calculates evaluation scores.
+    Train and evaluate one model for a specific data split.
+
+    This function trains the given model on the training data, predicts emotion
+    labels for the validation/testing data, calculates the main evaluation
+    scores, and returns the results together with the split name.
+
+    @param model_name: Name of the model being evaluated.
+    @type model_name: str
+
+    @param model: Machine learning model with fit() and predict() methods.
+    @type model: object
+
+    @param X_train: Training feature matrix.
+    @type X_train: scipy sparse matrix
+
+    @param X_val: Validation or testing feature matrix.
+    @type X_val: scipy sparse matrix
+
+    @param y_train: Training labels.
+    @type y_train: pandas Series
+
+    @param y_val: Validation or testing labels.
+    @type y_val: pandas Series
+
+    @param split_name: Description of the train/test split.
+    @type split_name: str
+
+    @return: Dictionary containing the split name, model name, accuracy,
+             macro F1-score, and weighted F1-score.
+    @rtype: dict
     """
 
     print("Training model:", model_name)
 
-    # Train model
+    # Train the model using the training data
     model.fit(X_train, y_train)
 
-    # Predict test labels
-    y_pred = model.predict(X_test)
+    # Predict emotion labels for the validation/testing data
+    y_pred = model.predict(X_val)
 
-    # Calculate scores
-    accuracy = accuracy_score(y_test, y_pred)
-    macro_f1 = f1_score(y_test, y_pred, average="macro")
-    weighted_f1 = f1_score(y_test, y_pred, average="weighted")
+    # Calculate evaluation scores
+    accuracy = accuracy_score(y_val, y_pred)
+    macro_f1 = f1_score(y_val, y_pred, average="macro")
+    weighted_f1 = f1_score(y_val, y_pred, average="weighted")
 
     result = {
         "split": split_name,
@@ -202,20 +262,19 @@ def evaluate_model(model_name, model, X_train, X_test, y_train, y_test, split_na
 
     return result
 
-
-# ---------------------------------------------------------
-# Step 6: Print results separately for each split
-# ---------------------------------------------------------
-
 def print_results_by_split(results_df):
     """
-    Prints a clean table for each train/test split.
+    Print model results separately for each train/test split.
 
-    The table is sorted from best to worst using:
-    1. macro_f1
-    2. accuracy
+    For each split, the models are sorted from best to worst using macro
+    F1-score first and accuracy second. A clear rank column is added so the
+    output is easier to read than the default pandas index.
 
-    The rank column fixes the confusing pandas index problem.
+    @param results_df: Dataframe containing all model evaluation results.
+    @type results_df: pandas.DataFrame
+
+    @return: None
+    @rtype: None
     """
 
     print("\n\n" + "=" * 80)
@@ -264,15 +323,19 @@ def print_results_by_split(results_df):
         print("Macro F1:", round(best_in_split["macro_f1"], 4))
         print("Weighted F1:", round(best_in_split["weighted_f1"], 4))
 
-
-# ---------------------------------------------------------
-# Step 7: Print overall best model
-# ---------------------------------------------------------
-
 def print_overall_best(results_df):
     """
-    Prints one final table sorted across all splits.
-    Also prints the best overall model.
+    Print the overall ranking across all splits.
+
+    This function sorts all experiment results from best to worst using macro
+    F1-score and accuracy. It then prints the full ranking table and highlights
+    the best overall model and split combination.
+
+    @param results_df: Dataframe containing all model evaluation results.
+    @type results_df: pandas.DataFrame
+
+    @return: None
+    @rtype: None
     """
 
     overall_table = results_df.sort_values(
@@ -311,25 +374,26 @@ def print_overall_best(results_df):
     print("Macro F1:", round(best_result["macro_f1"], 4))
     print("Weighted F1:", round(best_result["weighted_f1"], 4))
 
-
-# ---------------------------------------------------------
-# Step 8: Main experiment function
-# ---------------------------------------------------------
-
 def run_split_experiments(csv_file):
     """
-    Runs all split experiments.
+    Run all train/test split experiments.
 
-    Tested splits:
+    This function loads the dataset, creates several train/test splits, converts
+    text into TF-IDF features, trains each machine learning model, and stores
+    the evaluation results.
+
+    The tested splits are:
     - 40% train / 60% test
     - 30% train / 70% test
     - 20% train / 80% test
 
-    For each split, the code trains:
-    - Decision Tree
-    - SVM
-    - kNN
-    - Naive Bayes
+    The final results are saved to split_model_comparison_results.csv.
+
+    @param csv_file: Path to the training CSV file.
+    @type csv_file: str
+
+    @return: Dataframe containing the results for all models and splits.
+    @rtype: pandas.DataFrame
     """
 
     df = load_dataset(csv_file)
@@ -383,7 +447,7 @@ def run_split_experiments(csv_file):
     # Convert all results to dataframe
     results_df = pd.DataFrame(all_results)
 
-    # Save raw results before printing
+    # Save all experiment results before printing the formatted tables
     results_df.to_csv("split_model_comparison_results.csv", index=False)
 
     # Print clean results
@@ -398,9 +462,7 @@ def run_split_experiments(csv_file):
     return results_df
 
 
-# ---------------------------------------------------------
-# Program starts here
-# ---------------------------------------------------------
 
+# Run experiments only when this file is executed directly
 if __name__ == "__main__":
     run_split_experiments("train_emotion.csv")
