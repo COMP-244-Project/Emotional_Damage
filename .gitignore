@@ -1,3 +1,21 @@
 .DS_Store
 .DS_Store
 .DS_Store
+# macOS system files
+.DS_Store
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
+
+# Doxygen generated output
+html/
+latex/
+
+# Editor files
+.vscode/
+.idea/
